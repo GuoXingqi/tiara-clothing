@@ -10,6 +10,8 @@ import {
   signInWithPopup,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
  } from 'firebase/auth';
 
 import {
@@ -75,18 +77,26 @@ export const createUserDocumentFromAuth = async (userAuth, addtionalInformation 
   return userDocRef;
 } 
 
-//interface layer aka helper function
+//interface layer 
 
-//create a funtion wrapping create a userAuth account firebase method.
+//create a helper funtion to wrap createUserWithEmailAndPassword.
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
 
   return await createUserWithEmailAndPassword(auth, email, password);
 }
 
-//create a function to wraping sign in with email and password
+//create a helper function to wrapsignInWithEmailAndPassword.
 export const SignInAuthUserWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
   
   return await signInWithEmailAndPassword(auth, email, password); 
 }
+
+//create a helper function to wrap signOut 
+export const signOutUser = async () => await signOut(auth);
+
+//create a helper function to observe useContext CurrentUser
+//open listener -- permanent runs
+//if observed auth state changed ( userAuth=null/exist), run callback
+export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback);

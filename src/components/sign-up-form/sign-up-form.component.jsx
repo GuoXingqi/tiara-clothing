@@ -42,7 +42,7 @@ const SignUpForm = () => {
     //2)create user auth
     try {
       const {user} = await createAuthUserWithEmailAndPassword(email, password);
-      //3)push user auth to db
+      //3)push userAuth to db
       await createUserDocumentFromAuth(user, {displayName});
       resetFormfields();
     } catch (error) {

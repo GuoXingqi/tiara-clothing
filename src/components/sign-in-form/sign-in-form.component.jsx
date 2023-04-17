@@ -5,7 +5,6 @@ import Button from "../button/button.component";
 
 import { 
     signInWithGooglePopup,
-    createUserDocumentFromAuth,
     SignInAuthUserWithEmailAndPassword, 
 } from '../../utils/firebase/firebase.utils.js';
 
@@ -33,14 +32,9 @@ const SignInForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    //1) email and password pair isExist in firebre?
     try {
-
-      //const { reponse } = await SignInAuthUserWithEmailAndPassword(email, password);
       await SignInAuthUserWithEmailAndPassword(email, password);
       resetFormfields();
-      alert('Sign in with email and password succeeded!')
     } catch (error) {
       switch (error.code) {
         case 'auth/wrong-password':
@@ -57,9 +51,7 @@ const SignInForm = () => {
 
   //Google sign in and record user auth document
   const signInWithGoogle = async () => {
-    const { user } = await signInWithGooglePopup();//response is user
-    //const userDocRef = await createUserDocumentFromAuth(user); //-solve defined varaible but never used issue.
-    await createUserDocumentFromAuth(user);
+    await signInWithGooglePopup();//response is userAuth, pushed to doc in userContext
   }
 
   return (
