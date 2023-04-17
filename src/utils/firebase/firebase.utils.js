@@ -9,6 +9,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
  } from 'firebase/auth';
 
 import {
@@ -74,8 +75,18 @@ export const createUserDocumentFromAuth = async (userAuth, addtionalInformation 
   return userDocRef;
 } 
 
-//create a funtion does create a userAuth account using firebase module.
+//interface layer aka helper function
+
+//create a funtion wrapping create a userAuth account firebase method.
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
+
   return await createUserWithEmailAndPassword(auth, email, password);
+}
+
+//create a function to wraping sign in with email and password
+export const SignInAuthUserWithEmailAndPassword = async (email, password) => {
+  if (!email || !password) return;
+  
+  return await signInWithEmailAndPassword(auth, email, password); 
 }
