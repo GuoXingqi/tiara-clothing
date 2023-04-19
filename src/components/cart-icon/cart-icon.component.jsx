@@ -6,14 +6,14 @@ import { useContext } from 'react';
 import { CartContext } from '../../contexts/cart.context';
 
 const CartIcon = () => {
-  const {isCartOpen, SetIsCartOpen} = useContext(CartContext);
+  const {isCartOpen, SetIsCartOpen, cartCount} = useContext(CartContext);
 
   const toggleIsCartOpen = () => SetIsCartOpen(!isCartOpen); //update inverse value
 
   return (
     <div className='cart-icon-container' onClick={ toggleIsCartOpen }>
       <ShoppingIcon className='shopping-icon' />
-      <span className='item-count'>0</span>
+      <span className='item-count'>{cartCount}</span>
     </div>
   )
 }
