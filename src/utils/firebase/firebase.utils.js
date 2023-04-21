@@ -19,6 +19,10 @@ import {
   doc,
   getDoc,
   setDoc,
+  collection,
+  writeBatch,
+  query,
+  getDocs,
   // snapshotEqual,
 } from 'firebase/firestore';
 
@@ -48,6 +52,35 @@ export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider)
 
 //db, initialize fireStore
 export const db = getFirestore();
+
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+  //returns a collection reference even if it does not exist in our db yet
+  const collectionRef = collection(db, collectionKey);
+  //craete a batch to prepare documents to write
+  const batch = writeBatch(db);//similar to a atomic transaction 
+  //generating documents for each objects in objectsToAdd
+  objectsToAdd.forEach((object) => {
+    const DocRef = doc(collectionRef, object.title.toLowerCase());
+    batch.set(DocRef, object);
+  });
+
+  await batch.commit();  
+  console.log('donebatch');
+}
+
+export const getCategoriesAndDocuments = async () => {
+  const collectionRef = collection(db, 'categories');
+  const q = query(collectionRef);
+
+  const querySnapshot = await getDocs(q);
+  const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot)=>{
+    const { title, items } = docSnapshot.data();
+    acc[title.toLowerCase()] = items;
+    return acc;
+  }, {})
+
+  return categoryMap;
+}
 
 //create user db record from google auth
 export const createUserDocumentFromAuth = async (userAuth, addtionalInformation = {}) => {
