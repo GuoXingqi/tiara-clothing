@@ -5,7 +5,7 @@ const selectCategoriesReducer = (state) => state.categories;//get the component-
 //1 create a re-selector to the raw reducer data itself
 export const selectCategories = createSelector(//get actual categories data
   [selectCategoriesReducer], 
-  (selectCategoriesReducer) => selectCategoriesReducer.categories
+  (categoriesSlice) => categoriesSlice.categories
 );//1st parameter is input-selector, second parameter is a callback that prduces output
 
 export const selectCategoriesMap = createSelector(
@@ -17,4 +17,9 @@ export const selectCategoriesMap = createSelector(
       acc[title.toLowerCase()] = items;
       return acc;
     }, {})
+);
+
+export const selectCategoriesIsLoading = createSelector(
+  [selectCategoriesReducer],
+  (categoriesSlice) => categoriesSlice.isLoading
 );

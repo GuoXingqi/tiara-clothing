@@ -123,7 +123,7 @@ export const SignInAuthUserWithEmailAndPassword = async (email, password) => {
 //create a helper function to wrap signOut 
 export const signOutUser = async () => await signOut(auth);
 
-//create a helper function to observe useReducer CurrentUser
+//create a helper function to observe CurrentUser
 //open listener -- permanent runs
 //if observed auth state changed ( userAuth=null/exist), run callback
 export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback);
