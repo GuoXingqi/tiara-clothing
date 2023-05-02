@@ -51,7 +51,7 @@ const SignInForm = () => {
 
   //Google sign in and record user auth document
   const signInWithGoogle = async () => {
-    await signInWithGooglePopup();//response is userAuth, pushed to doc in userContext
+    await signInWithGooglePopup();//response is userAuth, pushed to doc in userReducer
   }
 
   return (

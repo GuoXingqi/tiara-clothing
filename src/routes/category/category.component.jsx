@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';//access to :category defined in shop route
-import { useContext, useEffect, useState, Fragment } from 'react';
-import { CategoriesContext } from '../../contexts/categories.context';
+import { useEffect, useState, Fragment } from 'react';
+import { useSelector } from 'react-redux';
+import { selectCategoriesMap } from '../../store/categories/categories.selector';
 
 import ProductCard from '../../components/product-card/product-card.component';
 
@@ -8,7 +9,7 @@ import './category.styles.scss';
 
 const Category = () => {
   const { category } = useParams();//:category shop route path
-  const { categoriesMap } = useContext(CategoriesContext);
+  const categoriesMap = useSelector(selectCategoriesMap);
 
   const [ products, setProducts ] = useState(categoriesMap[category]);//default value
 
