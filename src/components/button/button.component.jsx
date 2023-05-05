@@ -1,4 +1,4 @@
-import { BaseButton, GoogleSignInButton, InvertedButton } from "./button.styles";
+import { BaseButton, ButtonSpinner, GoogleSignInButton, InvertedButton } from "./button.styles";
 
 //maping to auto-complete
 export const BUTTON_TYPE_CLASSES = {
@@ -22,11 +22,13 @@ const getButton = (buttonType = BUTTON_TYPE_CLASSES.base) => {
 }
 
 //what does children do? + sign up font looks bizzard
-const Button = ({children, buttonType, ...otherProps}) => {
+const Button = ({children, buttonType, isLoading, ...otherProps}) => {
   const CustomButton = getButton(buttonType);
 
   return (
-    <CustomButton { ...otherProps }>{children}</CustomButton>
+    <CustomButton disabled={ isLoading } { ...otherProps }>
+      { isLoading ? <ButtonSpinner / > : children}
+    </CustomButton>
   );
 }
 
