@@ -1,6 +1,6 @@
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';//stripe-card-elememt
 
-import { useState } from 'react';//?
+import { useState } from 'react';//isProcessingPayment
 
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../store/user/user.selector';
@@ -8,7 +8,7 @@ import { selectCartTotalPrice } from '../../store/cart/cart.selector';
 
 import { BUTTON_TYPE_CLASSES } from '../button/button.component';
 
-import { PaymentFormContainer, FormContainer, PaymentBUtton } from './payment-form.styles';
+import { PaymentFormContainer, FormContainer, PaymentButton } from './payment-form.styles';
 
 
 const PaymentForm = () => {
@@ -55,7 +55,6 @@ const PaymentForm = () => {
     setIsProcessingPayment(false);
 
     if (paymentResult.error) {
-      console.log(paymentResult.error);
       alert(paymentResult.error.message);
     } else if (paymentResult.paymentIntent.status === 'succeeded') {
       alert("Payment Successful");
@@ -68,7 +67,7 @@ const PaymentForm = () => {
       <FormContainer onSubmit={paymentHandler} >
         <h2>Credit Card Payment: </h2>
         <CardElement />
-        <PaymentBUtton isLoading={isProcessingPayment} buttonType={BUTTON_TYPE_CLASSES.inverted}> Pay now </PaymentBUtton>
+        <PaymentButton isLoading={isProcessingPayment} buttonType={BUTTON_TYPE_CLASSES.inverted}> Pay now </PaymentButton>
       </FormContainer>
     </PaymentFormContainer>
   )
