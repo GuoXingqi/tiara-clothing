@@ -5,9 +5,23 @@ import Category from "../category/category.component";
 
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { fetchCategoriesAsync } from "../../store/categories/categories.action";
 
 import './shop.styles.scss';
+
+
+/// raga - refactoring needed
+import { fetchCategoriesStart, fetchCategoriesSuccess,  fetchCategoriesFailed} from "../../store/categories/categories.action";
+import { getCategoriesAndDocuments } from "../../utils/firebase/firebase.utils";
+const fetchCategoriesAsync = () => async (dispatch) => {//curring
+  dispatch(fetchCategoriesStart());
+  try {
+    const categoriesArray = await getCategoriesAndDocuments();
+    dispatch(fetchCategoriesSuccess(categoriesArray));
+  } catch (error) {
+    dispatch(fetchCategoriesFailed(error));
+  }
+}
+
 
 const Shop = () => {
 
