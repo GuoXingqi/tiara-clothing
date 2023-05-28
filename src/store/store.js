@@ -1,3 +1,5 @@
+///!!!! dont not type store.js. rootstate yet becasue of saga incomplete yet.
+
 //single source of truth
 import { compose, createStore, applyMiddleware } from "redux";
 import logger from 'redux-logger';//development tool
@@ -7,6 +9,8 @@ import thunk from "redux-thunk"; // tranform asynic function into actio-driven f
 //redux-persist
 import { persistStore, persistReducer } from "redux-persist";
 import storage from 'redux-persist/lib/storage';//local storage in brower
+
+//export type RootState = ReturnType<typeof rootReducer>;
 
 //middleware enhancer - only run this under non-production environment
 const middleWares = [process.env.NODE_ENV !== 'production' && logger,

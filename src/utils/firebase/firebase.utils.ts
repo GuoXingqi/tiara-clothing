@@ -12,6 +12,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  User,
+  NextOrObserver,
  } from 'firebase/auth';
 
 import {
@@ -23,8 +25,11 @@ import {
   writeBatch,
   query,
   getDocs,
+  QueryDocumentSnapshot,
   // snapshotEqual,
 } from 'firebase/firestore';
+
+import { Category } from "../../store/categories/categories.types";//to form Category[]
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -53,7 +58,14 @@ export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider)
 //db, initialize fireStore
 export const db = getFirestore();
 
-export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+export type ObjectToAdd = {
+  title: string //reading the function below we know each object at lease contains a title
+}
+
+export const addCollectionAndDocuments = async <T extends ObjectToAdd>(
+  collectionKey: string, 
+  objectsToAdd: T[]
+): Promise<void> => {
   //returns a collection reference even if it does not exist in our db yet
   const collectionRef = collection(db, collectionKey);
   //craete a batch to prepare documents to write
@@ -64,24 +76,37 @@ export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => 
     batch.set(DocRef, object);
   });
 
-  await batch.commit();  
-  console.log('donebatch');
+  await batch.commit();
 }
 
-export const getCategoriesAndDocuments = async () => {
+export const getCategoriesAndDocuments = async (): Promise<Category[]> => {
   const collectionRef = collection(db, 'categories');
   const q = query(collectionRef);
 
   const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map((docSnapshot) => docSnapshot.data());
+  return querySnapshot.docs.map((docSnapshot) => docSnapshot.data() as Category);//cast type
+}
+
+export type AddtionalInformation = {
+  displayName?: string; //????? redundant
+}
+
+export type UserData = { // userd for user reducer as well
+  displayName: string;
+  email: string;
+  createAt: Date;
 }
 
 //create user db record from google auth
-export const createUserDocumentFromAuth = async (userAuth, addtionalInformation = {}) => {
+//not User != UserData, the former is fireback auth object/ the latter is what we use in redux
+export const createUserDocumentFromAuth = async (
+  userAuth: User, 
+  addtionalInformation = {} as AddtionalInformation
+):Promise<void | QueryDocumentSnapshot<UserData>> => {
   if (!userAuth) return;
   
   const userDocRef = doc(db, 'users', userAuth.uid);//an instance of document
-  const userSnapshot = await getDoc(userDocRef);
+  const userSnapshot = await getDoc(userDocRef);//QuerySnapshot
 
   if (!userSnapshot.exists()) {//if user not exist, try create this document
 
@@ -93,28 +118,31 @@ export const createUserDocumentFromAuth = async (userAuth, addtionalInformation 
         displayName,
         email,
         createdAt,
-        ...addtionalInformation,
+        ...addtionalInformation,//redundant? 
       });
     } catch (error) {
-      console.log('error creating the user with google auth', error.message);
+      console.log('error creating the user with google auth', error);
     }
 
   }
   
-  return userDocRef;
+  return userSnapshot as QueryDocumentSnapshot<UserData>;//return if not catched nowhere
 } 
 
 //interface layer 
 
 //create a helper funtion to wrap createUserWithEmailAndPassword.
-export const createAuthUserWithEmailAndPassword = async (email, password) => {
+export const createAuthUserWithEmailAndPassword = async (
+  email:string, 
+  password:string
+) => {
   if (!email || !password) return;
 
   return await createUserWithEmailAndPassword(auth, email, password);
 }
 
 //create a helper function to wrapsignInWithEmailAndPassword.
-export const SignInAuthUserWithEmailAndPassword = async (email, password) => {
+export const SignInAuthUserWithEmailAndPassword = async (email:string, password:string) => {
   if (!email || !password) return;
   
   return await signInWithEmailAndPassword(auth, email, password); 
@@ -126,4 +154,6 @@ export const signOutUser = async () => await signOut(auth);
 //create a helper function to observe CurrentUser
 //open listener -- permanent runs
 //if observed auth state changed ( userAuth=null/exist), run callback
-export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback);
+export const onAuthStateChangedListener = (callback: NextOrObserver<User>) => onAuthStateChanged(auth, callback);
+
+//getCurrentUser function ? - saga
