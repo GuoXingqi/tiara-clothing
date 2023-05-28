@@ -28,7 +28,7 @@ const Shop = () => {
   const dispatch = useDispatch();
 
   useEffect(()=>{//we wrapped the async part in thunk
-    dispatch(fetchCategoriesAsync());//pay attention to how we call this currying funtion
+    dispatch(fetchCategoriesAsync());//currying
   },[dispatch])
 
   // path=":$variable_name"

@@ -1,5 +1,5 @@
-import { UserState } from "./user.reducer";
 import { createSelector } from "reselect";
+//import { RootState } from "../store";
 
 //select user-reducer
 export const selectUserReducer = (state:any) => state.user;

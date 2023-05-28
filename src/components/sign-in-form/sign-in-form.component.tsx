@@ -1,14 +1,14 @@
-import { useState } from "react";
-
+import { useState, FormEvent, ChangeEvent } from "react";
 import FormInput from "../form-input/form-input.component";
 import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
 
 import { 
     signInWithGooglePopup,
     SignInAuthUserWithEmailAndPassword, 
-} from '../../utils/firebase/firebase.utils.ts';
+} from '../../utils/firebase/firebase.utils';
 
-import './sign-in-form.styles.scss';
+import { SignInContainer, ButtonsContainer } from "./sign-in-form.styles";
+
 
 const defaultFormFields = {
   email: '',
@@ -21,7 +21,7 @@ const SignInForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
 
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormFields({ ...formFields, [name]: value });
   }
@@ -30,22 +30,26 @@ const SignInForm = () => {
     setFormFields(defaultFormFields);
   }
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event:FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       await SignInAuthUserWithEmailAndPassword(email, password);
       resetFormfields();
     } catch (error) {
-      switch (error.code) {
-        case 'auth/wrong-password':
-          alert("Incorrect password for email!");
-          break;
-        case 'auth/user-not-found':
-          alert('No user associated with this email');
-          break;
-        default:
-          console.log(error);
-      }
+      console.log('user sign in failed', error);
+
+
+      //code below not suitable to be typed yet, pending on saga
+      // switch (error.code) {
+      //   case 'auth/wrong-password':
+      //     alert("Incorrect password for email!");
+      //     break;
+      //   case 'auth/user-not-found':
+      //     alert('No user associated with this email');
+      //     break;
+      //   default:
+      //     console.log(error);
+      // }
     }
   };
 
@@ -55,7 +59,7 @@ const SignInForm = () => {
   }
 
   return (
-    <div className="sign-in-container">
+    <SignInContainer>
       <h2>Already have an account?</h2>
       <span>Sign in with your email and password</span>
       <form onSubmit={handleSubmit}>
@@ -76,7 +80,7 @@ const SignInForm = () => {
           onChange={handleChange}
         />
 
-        <div className="buttons-container">
+        <ButtonsContainer>
           <Button type='submit'>Sign in</Button>
           <Button 
             type='button' 
@@ -85,9 +89,9 @@ const SignInForm = () => {
           >
             Google sign in
           </Button>
-        </div>
+        </ButtonsContainer>
         </form>
-    </div>
+    </SignInContainer>
   );
 
 }

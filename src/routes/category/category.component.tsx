@@ -6,10 +6,16 @@ import { useEffect, useState, Fragment } from 'react';
 import { useSelector } from 'react-redux';
 import { selectCategoriesMap, selectCategoriesIsLoading } from '../../store/categories/categories.selector';
 
-import './category.styles.scss';
+import {CategoryTitle, CategoryContainer} from './category.styles';
+
+type CategoryRouteParams = {
+  category: string;
+}
+
 
 const Category = () => {
-  const { category } = useParams();//:category shop route path
+  //enforce type to only string
+  const { category } = useParams<keyof CategoryRouteParams>() as CategoryRouteParams;//:category shop route path
   const categoriesMap = useSelector(selectCategoriesMap);
   const categoriesIsLoading = useSelector(selectCategoriesIsLoading);
 
@@ -24,16 +30,16 @@ const Category = () => {
 
   return (
     <Fragment>
-      <h2 className='category-title'>{category.toUpperCase()}</h2>
+      <CategoryTitle>{category.toUpperCase()}</CategoryTitle>
       { 
         categoriesIsLoading ? <Spinner/> :
-          <div className='category-container'>
+          <CategoryContainer>
           {
             products && products.map( ( product ) => (//products is asyn, and needs safeguard
                 <ProductCard key={product.id} product={product} />
               ))
           }
-          </div>  
+          </CategoryContainer>  
       }
     </Fragment>
   )

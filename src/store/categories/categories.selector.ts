@@ -1,6 +1,7 @@
 import { createSelector } from "reselect";//memoized selector to prevent unnecessaire react dom re-rendering
 import { CategoriesState } from "./categories.reducer";
 import { CategoryMap } from "./categories.types";
+//import { RootState } from "../store"; state: RootState - pending on saga
 
 //get the component-reducer raw object
 const selectCategoriesReducer = (state:any):CategoriesState => state.categories;//feels illeagl to use 'any' here

@@ -10,6 +10,8 @@ import { BUTTON_TYPE_CLASSES } from '../button/button.component';
 
 import { PaymentFormContainer, FormContainer, PaymentButton } from './payment-form.styles';
 
+import { FormEvent } from 'react';
+
 
 const PaymentForm = () => {
 
@@ -22,7 +24,7 @@ const PaymentForm = () => {
   //1) fetch payment intent from netlify
   //2) complete payment with card information
   //testing credit card: 4242 4242 4242 4242 , date in future, 3-digit code random
-  const paymentHandler = async (event) => {
+  const paymentHandler = async (event:FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!stripe || !elements) {
@@ -42,10 +44,14 @@ const PaymentForm = () => {
 
     const { paymentIntent: { client_secret } } = response;//destucturing out client_secret
 
+    //type guard card be assign it // mroe strict if we use strip-card elemet
+    const cardDetails = elements.getElement(CardElement);
+    if(cardDetails === null) return;
+    
     //step 2, finish paymentIntent (client_secret) with card information
     const paymentResult = await stripe.confirmCardPayment(client_secret, {
       payment_method: {
-        card: elements.getElement(CardElement),
+        card: cardDetails,
         billing_details: {//more fields could fille, like billing address, phone number etc
           name: currentUser ? currentUser.displayName : "Guest",
         },

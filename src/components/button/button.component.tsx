@@ -1,14 +1,15 @@
+import { FC, ButtonHTMLAttributes } from "react";//pre-defined types from react
 import { BaseButton, ButtonSpinner, GoogleSignInButton, InvertedButton } from "./button.styles";
 
 //maping to auto-complete
-export const BUTTON_TYPE_CLASSES = {
-  base: 'base',
-  google: 'google-sign-in',
-  inverted: 'inverted',
+export enum BUTTON_TYPE_CLASSES {
+  base = 'base',
+  google = 'google-sign-in',
+  inverted = 'inverted',
 }
 
 //return correct Button styled-component string based on buttonType props
-const getButton = (buttonType = BUTTON_TYPE_CLASSES.base) => {
+const getButton = (buttonType = BUTTON_TYPE_CLASSES.base):typeof BaseButton => {
   return (
     //passing buttong Type to the follwing mapping, 
     //for exemple, if buttonType matched with base, return a BaseButton styled-component
@@ -21,8 +22,13 @@ const getButton = (buttonType = BUTTON_TYPE_CLASSES.base) => {
   )
 }
 
-//what does children do? + sign up font looks bizzard
-const Button = ({children, buttonType, isLoading, ...otherProps}) => {
+export type ButtonProps = {
+ buttonType ?: BUTTON_TYPE_CLASSES;
+ isLoading?: boolean;
+} & ButtonHTMLAttributes<HTMLButtonElement>;// htmlattribute <html elements>
+
+//children do - React.ReactNode 
+const Button:FC<ButtonProps> = ({children, buttonType, isLoading, ...otherProps}) => {
   const CustomButton = getButton(buttonType);
 
   return (

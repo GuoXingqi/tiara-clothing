@@ -36,7 +36,7 @@ const subtractCartItem = (cartItems: CartItem[], productToSubstract: CategoryIte
   //if the product.quantity > 1, substract quantity it by 1
   const existingCartItem = cartItems.find((cartItem) => 
     cartItem.id === productToSubstract.id
-  ); // !!!! it worked!
+  ); //it works!!!
 
   if (existingCartItem && existingCartItem.quantity > 1) {
     //if found, return a new array objec with decrement addCartItem.quantity

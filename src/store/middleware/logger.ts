@@ -1,5 +1,8 @@
+import { Middleware } from "@reduxjs/toolkit";
+//import { RootState } from "../store"; // pending on saga ---- not in sue anyway
+
 //customized logger middleware difined in currying patern - not in use
-export const loggerMiddleware = (store) => (next) => (action) => {
+export const loggerMiddleware:Middleware<{}, any> = (store) => (next) => (action) => {
   if (!action.type) {
     return next(action);
   }
